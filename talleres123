@@ -13,7 +13,7 @@ def crear_venta():
     cantidad = int(input("Ingrese cantidad: "))
     precio = float(input("Ingrese precio unitario: "))
     ventas.append([id, producto, cantidad, precio])
-    print("✅ Venta registrada con éxito.\n")
+    print("Venta registrada con éxito.\n")
 
 def listar_ventas():
     if not ventas:
@@ -104,7 +104,7 @@ def consultar_saldo():
     nombre = input("Ingrese el nombre del cliente: ")
     for c in clientes:
         if c[1].lower() == nombre.lower():
-            print(f"💳 Saldo de {c[1]}: {c[2]}\n")
+            print(f"Saldo de {c[1]}: {c[2]}\n")
             return
     print(" Cliente no encontrado.\n")
 
@@ -189,7 +189,7 @@ def eliminar_cliente():
             guardar_clientes_csv(clientes)
             print(" Cliente eliminado lógicamente.\n")
             return
-    print("❌ Cliente no encontrado.\n")
+    print("Cliente no encontrado.\n")
 
 # ---------- Pedidos ----------
 def cargar_pedidos_csv():
@@ -256,7 +256,7 @@ def listar_ventas_cliente():
         print(" Cliente no encontrado o inactivo.\n")
         return
     total = 0
-    print(f"📋 Ventas de {nombre_cliente}:")
+    print(f"Ventas de {nombre_cliente}:")
     for p in pedidos:
         if p[1] in clientes_dict and p[5] == 1:
             subtotal = p[3]*p[4]

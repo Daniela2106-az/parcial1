@@ -1,0 +1,11 @@
+id,titulo,autor,categoria,anio,stock
+1,Cien años de soledad,Gabriel García Márquez,Novela,1967,7
+2,El amor en los tiempos del cólera,Gabriel García Márquez,Novela,1985,5
+3,La hojarasca,Gabriel García Márquez,Novela,1955,4
+4,Rayuela,Julio Cortázar,Novela,1963,6
+5,Pedro Páramo,Juan Rulfo,Novela,1955,3
+6,El origen de las especies,Charles Darwin,Ciencia,1859,2
+7,Una breve historia del tiempo,Stephen Hawking,Ciencia,1988,4
+8,Introducción a la Filosofía,José Ferrater Mora,Filosofía,1960,5
+9,Crítica de la razón pura,Immanuel Kant,Filosofía,1781,1
+10,El arte de la guerra,Sun Tzu,Estrategia,500,6
