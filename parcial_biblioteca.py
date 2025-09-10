@@ -140,7 +140,7 @@ def usuarios_prestamos():
     print("--- Usuarios con préstamos Asc ---")
     for u in usuarios_con_prestamos:
         print(f"{u[0]} , {u[1]} , {u[2]}")
-
+ 
 # ==============================
 #   MENÚ GENERAL
 # ==============================
