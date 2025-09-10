@@ -1,0 +1,311 @@
+import os
+import csv
+
+# ==============================
+#         TALLER 1 - VENTAS
+# ==============================
+
+ventas = []
+
+def crear_venta():
+    id = int(input("Ingrese ID de la venta: "))
+    producto = input("Ingrese producto: ")
+    cantidad = int(input("Ingrese cantidad: "))
+    precio = float(input("Ingrese precio unitario: "))
+    ventas.append([id, producto, cantidad, precio])
+    print("✅ Venta registrada con éxito.\n")
+
+def listar_ventas():
+    if not ventas:
+        print("⚠️ No hay ventas registradas.\n")
+    else:
+        print("📋 Listado de ventas:")
+        for v in ventas:
+            print(f"ID: {v[0]} | Producto: {v[1]} | Cantidad: {v[2]} | Precio: {v[3]}")
+        print()
+
+def buscar_venta():
+    id = int(input("Ingrese ID a buscar: "))
+    for v in ventas:
+        if v[0] == id:
+            print(f"✅ Venta encontrada: {v}\n")
+            return
+    print("❌ No existe esa venta.\n")
+
+def modificar_venta():
+    id = int(input("Ingrese ID de la venta a modificar: "))
+    for v in ventas:
+        if v[0] == id:
+            v[1] = input("Nuevo producto: ")
+            v[2] = int(input("Nueva cantidad: "))
+            v[3] = float(input("Nuevo precio unitario: "))
+            print("✅ Venta modificada.\n")
+            return
+    print("❌ No se encontró la venta.\n")
+
+def eliminar_venta():
+    id = int(input("Ingrese ID de la venta a eliminar: "))
+    for v in ventas:
+        if v[0] == id:
+            ventas.remove(v)
+            print("✅ Venta eliminada.\n")
+            return
+    print("❌ No existe esa venta.\n")
+
+def calcular_totales():
+    total = sum(v[2] * v[3] for v in ventas)
+    print(f"💰 Ingreso total: {total}\n")
+
+def menu_taller1():
+    while True:
+        print("=== MENÚ VENTAS ===")
+        print("1. Crear nueva venta")
+        print("2. Listar ventas")
+        print("3. Buscar por ID")
+        print("4. Modificar")
+        print("5. Eliminar")
+        print("6. Calcular totales")
+        print("7. Volver al menú general")
+        
+        opcion = input("Seleccione opción: ")
+        if opcion == "1": crear_venta()
+        elif opcion == "2": listar_ventas()
+        elif opcion == "3": buscar_venta()
+        elif opcion == "4": modificar_venta()
+        elif opcion == "5": eliminar_venta()
+        elif opcion == "6": calcular_totales()
+        elif opcion == "7": break
+        else: print("⚠️ Opción no válida\n")
+
+# ==============================
+#       TALLER 2 - CLIENTES
+# ==============================
+
+archivo_clientes = "clientes.txt"
+
+def cargar_clientes():
+    if not os.path.exists(archivo_clientes):
+        return []
+    with open(archivo_clientes, "r") as f:
+        lineas = f.readlines()
+    clientes = []
+    for l in lineas:
+        ced, nom, saldo = l.strip().split(",")
+        clientes.append([ced, nom, float(saldo)])
+    return clientes
+
+def guardar_clientes(clientes):
+    with open(archivo_clientes, "w") as f:
+        for c in clientes:
+            f.write(f"{c[0]},{c[1]},{c[2]}\n")
+
+def consultar_saldo():
+    clientes = cargar_clientes()
+    nombre = input("Ingrese el nombre del cliente: ")
+    for c in clientes:
+        if c[1].lower() == nombre.lower():
+            print(f"💳 Saldo de {c[1]}: {c[2]}\n")
+            return
+    print("❌ Cliente no encontrado.\n")
+
+def clientes_mayores_50():
+    clientes = cargar_clientes()
+    mayores = [c for c in clientes if c[2] > 50]
+    print(f"📊 Clientes con saldo mayor a 50: {len(mayores)}\n")
+
+def ordenar_por_saldo():
+    clientes = cargar_clientes()
+    clientes.sort(key=lambda x: x[2])
+    print("📋 Clientes ordenados por saldo:")
+    for c in clientes:
+        print(f"{c[1]} - {c[2]}")
+    print()
+
+def menu_taller2():
+    while True:
+        print("=== MENÚ CLIENTES ===")
+        print("1. Consultar saldo por nombre")
+        print("2. Contar clientes con saldo > 50")
+        print("3. Listar clientes ordenados por saldo")
+        print("4. Volver al menú general")
+        
+        opcion = input("Seleccione opción: ")
+        if opcion == "1": consultar_saldo()
+        elif opcion == "2": clientes_mayores_50()
+        elif opcion == "3": ordenar_por_saldo()
+        elif opcion == "4": break
+        else: print("⚠️ Opción no válida\n")
+
+# ==============================
+#       TALLER 3 - CLIENTES Y PEDIDOS
+# ==============================
+
+archivo_clientes_csv = "clientes.csv"
+archivo_pedidos_csv = "pedidos.csv"
+
+# ---------- Clientes ----------
+def cargar_clientes_csv():
+    if not os.path.exists(archivo_clientes_csv):
+        return []
+    clientes = []
+    with open(archivo_clientes_csv, newline="") as f:
+        reader = csv.reader(f)
+        next(reader, None)
+        for row in reader:
+            clientes.append([int(row[0]), row[1], row[2], row[3], int(row[4])])
+    return clientes
+
+def guardar_clientes_csv(clientes):
+    with open(archivo_clientes_csv, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["id_cliente","nombre","apellido","telefono","activo"])
+        for c in clientes:
+            writer.writerow(c)
+
+def registrar_cliente():
+    clientes = cargar_clientes_csv()
+    id_cliente = 1 if not clientes else clientes[-1][0] + 1
+    nombre = input("Nombre: ")
+    apellido = input("Apellido: ")
+    telefono = input("Teléfono: ")
+    clientes.append([id_cliente, nombre, apellido, telefono, 1])
+    guardar_clientes_csv(clientes)
+    print(f"✅ Cliente {nombre} registrado con ID {id_cliente}.\n")
+
+def listar_clientes():
+    clientes = cargar_clientes_csv()
+    print("📋 Clientes activos:")
+    for c in clientes:
+        if c[4] == 1:
+            print(f"ID: {c[0]} | {c[1]} {c[2]} | Tel: {c[3]}")
+    print()
+
+def eliminar_cliente():
+    clientes = cargar_clientes_csv()
+    id_cliente = int(input("Ingrese ID del cliente a eliminar: "))
+    for c in clientes:
+        if c[0] == id_cliente:
+            c[4] = 0
+            guardar_clientes_csv(clientes)
+            print("✅ Cliente eliminado lógicamente.\n")
+            return
+    print("❌ Cliente no encontrado.\n")
+
+# ---------- Pedidos ----------
+def cargar_pedidos_csv():
+    if not os.path.exists(archivo_pedidos_csv):
+        return []
+    pedidos = []
+    with open(archivo_pedidos_csv, newline="") as f:
+        reader = csv.reader(f)
+        next(reader, None)
+        for row in reader:
+            pedidos.append([int(row[0]), int(row[1]), row[2], float(row[3]), int(row[4]), int(row[5])])
+    return pedidos
+
+def guardar_pedidos_csv(pedidos):
+    with open(archivo_pedidos_csv, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["id_pedido","id_cliente","producto","precio","cantidad","activo"])
+        for p in pedidos:
+            writer.writerow(p)
+
+def registrar_pedido():
+    clientes = cargar_clientes_csv()
+    listar_clientes()
+    id_cliente = int(input("ID del cliente para el pedido: "))
+    nombre_producto = input("Nombre del producto: ")
+    precio = input("Precio unitario (opcional): ")
+    cantidad = input("Cantidad (opcional): ")
+    pedidos = cargar_pedidos_csv()
+    id_pedido = 1 if not pedidos else pedidos[-1][0] + 1
+    precio = float(precio) if precio else 0.0
+    cantidad = int(cantidad) if cantidad else 1
+    pedidos.append([id_pedido, id_cliente, nombre_producto, precio, cantidad, 1])
+    guardar_pedidos_csv(pedidos)
+    print(f"✅ Pedido {nombre_producto} registrado con ID {id_pedido}.\n")
+
+def listar_pedidos_cliente():
+    pedidos = cargar_pedidos_csv()
+    id_cliente = int(input("ID del cliente para listar pedidos: "))
+    print(f"📋 Pedidos del cliente ID {id_cliente}:")
+    for p in pedidos:
+        if p[1] == id_cliente and p[5] == 1:
+            print(f"ID Pedido: {p[0]} | Producto: {p[2]} | Precio: {p[3]} | Cantidad: {p[4]}")
+    print()
+
+def guardar_venta():
+    clientes = cargar_clientes_csv()
+    listar_clientes()
+    id_cliente = int(input("ID del cliente: "))
+    producto = input("Nombre del producto: ")
+    cantidad = int(input("Cantidad: "))
+    precio = float(input("Precio unitario: "))
+    pedidos = cargar_pedidos_csv()
+    id_pedido = 1 if not pedidos else pedidos[-1][0] + 1
+    pedidos.append([id_pedido, id_cliente, producto, precio, cantidad, 1])
+    guardar_pedidos_csv(pedidos)
+    print(f"✅ Venta registrada con ID {id_pedido}.\n")
+
+def listar_ventas_cliente():
+    pedidos = cargar_pedidos_csv()
+    nombre_cliente = input("Nombre del cliente: ")
+    clientes = cargar_clientes_csv()
+    clientes_dict = {c[0]: c for c in clientes if c[4] == 1 and c[1].lower() == nombre_cliente.lower()}
+    if not clientes_dict:
+        print("❌ Cliente no encontrado o inactivo.\n")
+        return
+    total = 0
+    print(f"📋 Ventas de {nombre_cliente}:")
+    for p in pedidos:
+        if p[1] in clientes_dict and p[5] == 1:
+            subtotal = p[3]*p[4]
+            total += subtotal
+            print(f"Producto: {p[2]} | Precio: {p[3]} | Cantidad: {p[4]} | Subtotal: {subtotal}")
+    print(f"💰 Total ventas: {total}\n")
+
+def menu_taller3():
+    while True:
+        print("=== MENÚ CLIENTES Y PEDIDOS ===")
+        print("1. Registrar cliente")
+        print("2. Listar clientes")
+        print("3. Eliminar cliente (lógica)")
+        print("4. Registrar pedido")
+        print("5. Listar pedidos de un cliente")
+        print("6. Guardar venta")
+        print("7. Listar ventas de un cliente")
+        print("8. Volver al menú general")
+        
+        opcion = input("Seleccione opción: ")
+        if opcion == "1": registrar_cliente()
+        elif opcion == "2": listar_clientes()
+        elif opcion == "3": eliminar_cliente()
+        elif opcion == "4": registrar_pedido()
+        elif opcion == "5": listar_pedidos_cliente()
+        elif opcion == "6": guardar_venta()
+        elif opcion == "7": listar_ventas_cliente()
+        elif opcion == "8": break
+        else: print("⚠️ Opción no válida\n")
+
+# ==============================
+#         MENÚ GENERAL
+# ==============================
+
+def menu_general():
+    while True:
+        print("=== MENÚ GENERAL ===")
+        print("1. Taller 1 (Ventas)")
+        print("2. Taller 2 (Clientes)")
+        print("3. Taller 3 (Clientes y Pedidos)")
+        print("4. Salir")
+        op = input("Seleccione opción: ")
+        if op == "1": menu_taller1()
+        elif op == "2": menu_taller2()
+        elif op == "3": menu_taller3()
+        elif op == "4":
+            print("👋 Saliendo del programa...")
+            break
+        else: print("⚠️ Opción inválida\n")
+
+# EJECUTAR PROGRAMA
+menu_general()
